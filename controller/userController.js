@@ -25,7 +25,7 @@ const addNewUser = async({name, email, password}) =>{
 
 const loginAttemp = async({email,password})=>{
     let user =  await User.findOne({email:email});
-    console.log(user);
+    console.log("loginAttemp",user);
     if(!user) return {status: false, result: "Email does not exist."} 
     else{
         if(user.password===password) return {status: true , result:user}
@@ -61,11 +61,51 @@ const hasToken = async(userId)=>{
 }
 const updateToken = async(userId,newToken)=>{
     try {
-        let token = await Token.updateOne({user:userId}, {refreshToken:newToken})
+        let token = await Token.findOneAndUpdate({user:userId}, {refreshToken:newToken})
         console.log(token);
     } catch (e) {
         console.log("Error",e.message)
         return {status: false, result: e.message}        
+    }
+}
+
+const addUserAddress = async(email, addressId)=>{
+    try{
+        let user =  await User.findOne({email:email});
+        console.log(user);
+        let newAddress = [...user.address,addressId];
+        console.log(newAddress);
+        let updatedUser = await User.findOneAndUpdate({email:email},{address:newAddress});
+        console.log(updatedUser);
+        return {status:true , result:"SuccessfullyAdded"}
+    }
+    catch(e){
+        console.log(e.message);
+        return {status:false , result:e.message}
+    }
+   
+}
+
+const getUserAddress = async(email)=>{
+    let user = await User.findOne({email:email}).populate("address")
+    console.log(user);
+    return {status:true ,result:user.address}
+}
+
+
+const deleteAddress = async(email,addressID)=>{
+    try{
+        let user =  await User.findOne({email:email});
+        console.log(user);
+        let newAddress = [];
+        user.address.forEach(e=>{if(e!==addressID) newAddress.push(e);})
+        let updatedUser = await User.findOneAndUpdate({email:email},{address:newAddress});
+        console.log(updatedUser);
+        return {status:true , result:"Successfully Deleted Address from User!"}
+    }
+    catch(e){
+        console.log(e.message);
+        return {status:false , result:e.message}
     }
 }
 
@@ -74,5 +114,8 @@ module.exports = {
     loginAttemp,
     storeToken,
     hasToken,
-    updateToken
+    updateToken,
+    addUserAddress,
+    getUserAddress,
+    deleteAddress
 }
