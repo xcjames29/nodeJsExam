@@ -200,8 +200,8 @@ app.route("/address/:id")
                 let token = header.split(" ")[1];
                 let verifyToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
                 console.log(verifyToken);
-                let {id, city, pincode, state, country, addressLine1, addressLine2, label } = req.body;
-                let updateAddress = await AddressController.updateAddress(id, city, pincode,state, country, addressLine1, addressLine2, label);
+                let { city, pincode, state, country, addressLine1, addressLine2, label } = req.body;
+                let updateAddress = await AddressController.updateAddress(addressId, city, pincode,state, country, addressLine1, addressLine2, label);
                 if(updateAddress.status){
                     res.status(200).send(updateAddress.result);
                 }
