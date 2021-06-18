@@ -15,7 +15,7 @@ const addAddress = async (city, pincode, state, country, addressLine1, addressLi
 
 const updateAddress = async (id,city, pincode, state, country, addressLine1, addressLine2, label) => {
     try {
-        let address = await Address.findOneAndUpdate({id:id},{ city: city, pincode: pincode, state: state, country: country, addressLine1: addressLine1, addressLine2: addressLine2, label: label });
+        let address = await Address.findOneAndUpdate({_id:id},{ city: city, pincode: pincode, state: state, country: country, addressLine1: addressLine1, addressLine2: addressLine2, label: label });
         console.log(address)
         return {status:true, result:"Address successfully updated!"}
     }
