@@ -152,7 +152,7 @@ app.route("/address/:id")
                         res.status(400).send("Something went wrong");
                     }
                 }
-                else{
+                else {
                     res.status(400).send("Something went wrong with adding address");
                 }
             }
@@ -175,14 +175,14 @@ app.route("/address/:id")
                 let verifyToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
                 console.log(verifyToken);
                 let { email } = verifyToken;
-                let deleteResult = await UserController.deleteAddress(email,req.params,id)
-                if(deleteResult.status){
+                let deleteResult = await UserController.deleteAddress(email, req.params, id)
+                if (deleteResult.status) {
                     res.status(200).send(deleteResult.status)
                 }
-                else{
+                else {
                     res.status(400).send("Deletion Unsuccessful");
                 }
-            }catch (e) {
+            } catch (e) {
                 console.log(e.message);
                 res.status(403).send("Token is expired! request post to /token to get new access_token");
             }
@@ -201,20 +201,39 @@ app.route("/address/:id")
                 let verifyToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
                 console.log(verifyToken);
                 let { city, pincode, state, country, addressLine1, addressLine2, label } = req.body;
-                let updateAddress = await AddressController.updateAddress(addressId, city, pincode,state, country, addressLine1, addressLine2, label);
-                if(updateAddress.status){
+                let updateAddress = await AddressController.updateAddress(addressId, city, pincode, state, country, addressLine1, addressLine2, label);
+                if (updateAddress.status) {
                     res.status(200).send(updateAddress.result);
                 }
-                else{
+                else {
                     res.send(400).send(updateAddress.result)
                 }
             }
-            catch(e){
+            catch (e) {
                 console.log(e.message);
                 res.status(403).send("Token is expired! request post to /token to get new access_token");
             }
         }
     })
+
+app.post("/logout",async (req,res)=>{
+    console.log("DATAAAAAAA", req.body);
+    let { refreshToken } = req.body;
+    try {
+      let data = await UserController.deleteToken(refreshToken);
+      console.log("logout", data)
+      if(data.status){
+          res.status(200).send(data.result);
+      }
+      else{
+          res.status(400).send(data.result)
+      }
+    }
+    catch (e) {
+        console.log(e.message);
+        res.status(403).send(e.message);
+    }
+})
 
 
 app.listen(PORT, () => {

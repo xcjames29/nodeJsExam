@@ -109,6 +109,18 @@ const deleteAddress = async(email,addressID)=>{
     }
 }
 
+
+const deleteToken = async (refreshToken)=>{
+    try{
+        let token =  await Token.deleteOne({refreshToken:refreshToken});
+        console.log(token);
+        return {status:true , result:"Successfully Deleted token!"}
+    }
+    catch(e){
+        console.log(e.message);
+        return {status:false , result:e.message}
+    }
+}
 module.exports = {
     addNewUser,
     loginAttemp,
@@ -117,5 +129,6 @@ module.exports = {
     updateToken,
     addUserAddress,
     getUserAddress,
-    deleteAddress
+    deleteAddress,
+    deleteToken
 }
