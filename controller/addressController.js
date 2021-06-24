@@ -25,7 +25,22 @@ const updateAddress = async (id,city, pincode, state, country, addressLine1, add
     }
 }
 
+const deleteAddress = async (id) => {
+    try {
+        let address = await Address.deleteOne({_id:id});
+        console.log(address)
+        return {status:true, result:"Address successfully deleted!"}
+    }
+    catch (e) {
+        console.log("Delete ADDRESS ERROR",e.message)
+        return {status:false, result:e.message}
+    }
+}
+
+
+
 module.exports ={
     addAddress,
-    updateAddress    
+    updateAddress,
+    deleteAddress
 }
